@@ -24,6 +24,27 @@ namespace LotteryAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DrawHistory>>> GetDrawHistories()
         {
+            //int kek = _context.DrawHistories.LastAsync().Result.DrawId+1;
+            int drawid = _context.DrawHistories.Max(x => x.DrawId);
+            drawid++;
+            //int kek = 2;
+            string date = DateTime.Now.ToString();
+
+            Random random = new Random();
+
+            for (int i = 0; i < 5; i++)
+            {
+                int drawnumber = random.Next(1, 51);
+
+                DrawHistory drawHistory = new DrawHistory();
+                drawHistory.Date = date;
+                drawHistory.DrawId = drawid;
+                drawHistory.Draw = drawnumber;
+
+                _context.DrawHistories.Add(drawHistory);
+                await _context.SaveChangesAsync();
+            }
+
             return await _context.DrawHistories.ToListAsync();
         }
 
